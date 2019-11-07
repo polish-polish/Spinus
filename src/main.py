@@ -66,9 +66,14 @@ if __name__ == '__main__':
                 for r in response[::-1]:
                     index+=1
                     if r['message']=='stopped' and r['type']=='notify':
+                        stoped=r
                         target=response[-index]
                         break
-                pprint(response[-6:]) 
+                if isinstance(stoped['payload'],dict) and stoped['payload'][u'reason']==u'exited-normally':
+                    print "[%d] NORMAL EXIT %s" %(num,fn)
+                    response = gdbmi.exit()
+                    continue
+                #pprint(response[-6:]) 
                 if target==None:
                     print "err:%s" % fn
                     pprint(response)
